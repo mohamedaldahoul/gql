@@ -1,0 +1,12 @@
+{
+  "name": "gql",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/mohamedaldahoul/gql.git",
+  "author": "mohamedaldahoul <ma811forever@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "apollo-server": "^2.8.1",
+    "graphql": "^14.4.2"
+  }
+}
