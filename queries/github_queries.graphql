@@ -1,0 +1,216 @@
+# /**
+#  * I used for this queries Github Graphql open API
+#  * https://developer.github.com/v4/explorer/
+#  * 
+#  */
+
+{
+  viewer {
+    name
+    bio
+    id
+    company
+    avatarUrl
+  }
+}
+
+{ #You can add repository owner with their login and fetch the data
+  repositoryOwner(login: "facebook"){
+    id
+    resourcePath
+    url
+  }
+}
+
+{ #You can add repository name and the owner for the specific repo and get the data
+  repository(name: "graphql", owner: "facebook"){
+    id
+    description
+    homepageUrl
+  }
+}
+
+# Input Types: Integer, Float, String, Boolean, Null, Enum, List, Object
+
+
+# To get the schema design directly
+{
+  __schema{
+    queryType{ # querytype help to get/drill down into the all the queries are part of the schema
+      name
+      description
+      fields{
+        name
+        description
+        isDeprecated
+        deprecationReason
+      }
+    }
+  }
+}
+
+# To get a better sense of what's going on with our schema is using the __type query
+
+{
+  __type(name: "Repository"){
+    kind
+    name
+    description
+  }
+}
+
+# Aliases
+# Create aliases for the repos has the same owner
+# Also, it might be solution for cross table queries
+
+{
+  graphqlProject: repository(name: "graphql", owner: "facebook"){
+    id
+    description
+    createdAt
+  }
+  reactProject: repository(name: "react", owner: "facebook"){
+    id
+    description
+    homepageUrl
+  }
+}
+
+# Fragments
+
+{
+  graphqlProject: repository(name: "graphql", owner: "facebook"){
+    ...repoFields
+  }
+  reactProject: repository(name: "react", owner: "facebook"){
+    ...repoFields
+  }
+}
+
+fragment repoFields on Repository {
+  id
+  description
+  homepageUrl
+}
+
+
+# Nested Fields
+{
+  viewer{
+    id
+    name
+    isEmployee
+    location
+    databaseId
+    repositories(last:10){
+      edges{
+        node{
+          id
+          name
+        }
+      }
+    }
+  }
+}
+
+# Connections & Multiple nested fields
+{
+  repository(owner: "github", name: "opensource.guide"){
+    id
+    name
+    description
+    watchers(first: 5){
+      edges{
+        node{
+          id
+          name
+          company
+        }
+      }
+    }
+    pullRequests(last:4){
+      edges{
+        node{
+          id
+          author{
+            avatarUrl
+            login
+            resourcePath
+          }
+        }
+      }
+    }
+  }
+}
+
+# Pagination
+{
+  repository(name: "graphql", owner: "facebook"){
+    id
+    issues(last: 5, states: CLOSED) {
+      edges {
+        node {
+          id
+          title
+          number
+        }
+      }
+    }
+  }
+}
+
+# Adding name to the Queries
+
+query FirstFiveOrgMembers {
+  organization(login: "facebook"){
+    id
+    name
+    membersWithRole(first:5) {
+      edges {
+        node {
+          id
+          name
+        }
+      }
+    }
+  }
+}
+
+
+# Adding arrguments to the query
+
+query FirstFiveOrgMembers($login: String!) {
+  organization(login: $login){
+    id
+    name
+    membersWithRole(first:5) {
+      edges {
+        node {
+          id
+          name
+        }
+      }
+    }
+  }
+}
+
+# Passing Multiple variable definitions
+
+query FirstNOrgMembers($login: String!, $n: Int!) {
+  organization(login: $login){
+    id
+    name
+    membersWithRole(first:$n) {
+      edges {
+        node {
+          id
+          name
+        }
+      }
+    }
+  }
+}
+
+
+
+

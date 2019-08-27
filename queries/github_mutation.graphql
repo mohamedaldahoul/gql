@@ -1,0 +1,19 @@
+# Create a mutation in Graphql
+
+mutation NewComment($input: AddCommentInput!) {
+  addComment(input: $input) {
+    clientMutationId
+    subject{
+      id
+    }
+  }
+}
+
+
+mutation NewReaction($input: AddReactionInput!){
+  addReaction(input: $input){
+    reaction{
+      content
+    }
+  }
+}
