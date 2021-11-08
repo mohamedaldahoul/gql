@@ -6,7 +6,7 @@
   "author": "mohamedaldahoul <ma811forever@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "apollo-server": "^2.8.1",
+    "apollo-server": "^2.25.3",
     "graphql": "^14.4.2"
   },
   "devDependencies": {
